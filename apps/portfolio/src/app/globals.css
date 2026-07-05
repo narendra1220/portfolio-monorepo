@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .shadow-glow-cyan {
+    box-shadow: 0 0 60px -10px rgba(34, 211, 238, 0.35);
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html,
+  body {
+    background: #05070d;
+    color: #e2e8f0;
+  }
+  body {
+    font-feature-settings: "ss01", "ss02", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: rgba(34, 211, 238, 0.25);
+    color: #f8fafc;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.15);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.25);
+  }
+}
+
+@layer components {
+  .container-tight {
+    @apply mx-auto w-full max-w-6xl px-6;
+  }
+  .container-wide {
+    @apply mx-auto w-full max-w-7xl px-6;
+  }
+  .section {
+    @apply py-20 sm:py-28;
+  }
+  .prose-invert-tight {
+    @apply text-slate-300 leading-relaxed;
+  }
+  .prose-invert-tight h2 {
+    @apply text-white text-xl font-semibold mt-10 mb-4;
+  }
+  .prose-invert-tight h3 {
+    @apply text-white text-lg font-semibold mt-8 mb-3;
+  }
+  .prose-invert-tight p {
+    @apply my-3;
+  }
+  .prose-invert-tight ul {
+    @apply my-3 list-disc pl-6 space-y-1.5;
+  }
+  .prose-invert-tight code {
+    @apply rounded bg-white/5 px-1.5 py-0.5 text-cyan-200 font-mono text-[0.85em];
+  }
+  .prose-invert-tight pre {
+    @apply rounded-xl bg-black/60 border border-white/10 p-4 overflow-x-auto text-xs leading-relaxed;
+  }
+  .hairline {
+    @apply border border-white/10;
+  }
+  .glass {
+    @apply bg-white/[0.03] backdrop-blur-md border border-white/10;
+  }
+}

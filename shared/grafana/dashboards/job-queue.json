@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 39,
+  "title": "Job Queue — Overview",
+  "uid": "job-queue-overview",
+  "tags": ["job-queue", "redis", "portfolio"],
+  "timezone": "browser",
+  "refresh": "10s",
+  "time": { "from": "now-1h", "to": "now" },
+  "templating": { "list": [] },
+  "annotations": { "list": [] },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Jobs completed / sec",
+      "id": 1,
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(rate(jobqueue_jobs_completed_total[1m]))",
+          "legendFormat": "completed/s",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "ops", "color": { "mode": "thresholds" } }
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["last"], "values": false },
+        "graphMode": "area"
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Retries / sec",
+      "id": 2,
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(rate(jobqueue_jobs_retried_total[1m]))",
+          "legendFormat": "retries/s",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops" } }
+    },
+    {
+      "type": "stat",
+      "title": "Dead-lettered / 5m",
+      "id": 3,
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(increase(jobqueue_jobs_dead_total[5m]))",
+          "legendFormat": "dlq",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Pending (PEL)",
+      "id": 4,
+      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "max(jobqueue_pending)",
+          "legendFormat": "pending",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Process latency (ms) p50 / p95 / p99",
+      "id": 5,
+      "gridPos": { "x": 0, "y": 4, "w": 24, "h": 9 },
+      "targets": [
+        { "expr": "jobqueue_process_ms_p50", "legendFormat": "p50", "refId": "A" },
+        { "expr": "jobqueue_process_ms_p95", "legendFormat": "p95", "refId": "B" },
+        { "expr": "jobqueue_process_ms_p99", "legendFormat": "p99", "refId": "C" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ms" } }
+    },
+    {
+      "type": "timeseries",
+      "title": "Queue depth",
+      "id": 6,
+      "gridPos": { "x": 0, "y": 13, "w": 12, "h": 8 },
+      "targets": [
+        { "expr": "jobqueue_waiting", "legendFormat": "waiting", "refId": "A" },
+        { "expr": "jobqueue_delayed", "legendFormat": "delayed", "refId": "B" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Worker concurrency",
+      "id": 7,
+      "gridPos": { "x": 12, "y": 13, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "jobqueue_inflight",
+          "legendFormat": "in-flight",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

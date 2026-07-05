@@ -1,0 +1,11 @@
+@layer utilities {
+  .shadow-glow-cyan {
+    box-shadow: 0 0 60px -10px rgba(34, 211, 238, 0.35);
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}

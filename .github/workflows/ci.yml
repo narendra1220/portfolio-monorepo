@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm install --no-audit --no-fund
+      - name: cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            apps/*/node_modules
+            packages/*/node_modules
+          key: nm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+  build-job-queue:
+    needs: install
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports: [6379:6379]
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm install --no-audit --no-fund
+      - name: typecheck + build
+        working-directory: apps/job-queue
+        run: ./node_modules/.bin/tsc
+      - name: smoke test
+        working-directory: apps/job-queue
+        env:
+          REDIS_HOST: 127.0.0.1
+        run: |
+          node dist/examples/producer.js 5
+          timeout 15 node dist/examples/consumer.js || true
+          node dist/cli.js stats default
+
+  build-portfolio:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm install --no-audit --no-fund
+      - name: next build
+        working-directory: apps/portfolio
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+        run: ./node_modules/.bin/next build
